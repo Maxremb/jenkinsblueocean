@@ -1,0 +1,19 @@
+node {
+# recuperer le dossier git
+stage ('SCM') {
+git 'https://gitlab.com/Maxremb/newprojectjenkins.git'
+}
+
+#commande de mvn build en skipant les test
+stage ('Compile') {
+def mvnHome= tool name:'maven-3', type:'maven'
+sh "${mvnHome}/bin/mvn package -Dmaven.test.skip =true" 
+}
+
+#scann du projet
+stage ('SonarQube') {
+def mvnHome= tool name: 'maven-3', type :'maven'
+sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=https://https://192.168.0.43:9000"
+}
+
+}
